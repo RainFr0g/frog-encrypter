@@ -1,0 +1,13 @@
+{
+	"id": "frog-encrypter",
+	"name": "Frog Encrypter",
+	"version": "1.0.0",
+	"minAppVersion": "1.4.5",
+	"description": "Encrypt text fragments, notes, and files inside and outside your vault.",
+	"author": "RainFr0g",
+	"authorUrl": "https://github.com/RainFr0g",
+	"fundingUrl": {
+		"Buy Me a Coffee": "https://buymeacoffee.com/rainfr0g"
+	},
+	"isDesktopOnly": true
+}
