@@ -32,7 +32,7 @@ class DecryptPasswordModal extends Modal {
 	onOpen(): void {
 		const { contentEl, titleEl } = this;
 		titleEl.setText('Decrypting');
-		contentEl.createEl('div');
+		contentEl.createDiv();
 
 		// =================== PASSWORD ROW =======================================================================
 		new Setting(contentEl)

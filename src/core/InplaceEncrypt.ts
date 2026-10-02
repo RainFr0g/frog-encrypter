@@ -50,7 +50,7 @@ export class InplaceEncrypt {
             const regex = SECRET_REGEX;
             let lastIndex = 0;
             let match;
-            const fragment = activeDocument.createDocumentFragment();
+            const fragment = createFragment();
 
             while ((match = regex.exec(text)) !== null) {
                 if (match.index > lastIndex) 

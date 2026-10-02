@@ -30,7 +30,7 @@ export class InplaceEncryptHelper {
     }
     
     static getSecretIcon(plugin: IFrogEncrypter, encryptedText: string): HTMLElement {
-        const element = activeDocument.createElement('span');
+        const element = createSpan();
         element.className = 'frog-secret-icon';
         element.setAttribute('data-encrypted-text', encryptedText);
 

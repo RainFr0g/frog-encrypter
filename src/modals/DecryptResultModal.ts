@@ -39,9 +39,8 @@ class DecryptResultModal extends Modal {
 		const activeViewMode = this.app.workspace.getActiveViewOfType(MarkdownView)?.getMode();
 
 		// =================== RESULT TEXT AREA =======================================================================
-		const resultContainer = contentEl.createEl('div', {
-			cls: 'frog-decrypt-result-container'
-		});
+		const resultContainer = contentEl.createDiv();
+		resultContainer.addClass('frog-decrypt-result-container');
 
 		const textAreaEl = resultContainer.createEl('textarea', {
 			text: this.decryptedText,

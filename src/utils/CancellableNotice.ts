@@ -12,15 +12,15 @@ export class CancellableNotice {
         this.signal = this.controller.signal;
 
         this.notice = new Notice('', 0);
-        this.notice.noticeEl.empty();
-        this.notice.noticeEl.addClass('frog-cancellable-notice');
+        this.notice.messageEl.empty();
+        this.notice.messageEl.addClass('frog-cancellable-notice');
 
-        this.messageEl = this.notice.noticeEl.createSpan({
+        this.messageEl = this.notice.messageEl.createSpan({
             text: initialMessage,
             cls: 'frog-cancellable-notice-message'
         });
 
-        this.buttonEl = this.notice.noticeEl.createEl('button', {
+        this.buttonEl = this.notice.messageEl.createEl('button', {
             text: 'Cancel',
             cls: 'frog-cancellable-notice-button'
         });

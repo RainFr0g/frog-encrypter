@@ -43,9 +43,8 @@ class EncryptInsertPasswordModal extends Modal {
 		titleEl.setText('Encrypting');
 		
 		// =================== INSERT TEXT AREA =======================================================================
-		const textContainer = contentEl.createEl('div', {
-			cls: 'frog-decrypt-result-container'
-		});
+		const textContainer = contentEl.createDiv();
+		textContainer.addClass('frog-decrypt-result-container');
 
 		textAreaInput = textContainer.createEl('textarea', {
 			cls: 'frog-modal-textarea',

@@ -36,7 +36,7 @@ class EncryptPasswordModal extends Modal {
 		let hintInput: TextComponent;
 		
 		titleEl.setText('Encrypting');
-		contentEl.createEl('div');
+		contentEl.createDiv();
 
 		// =================== PASSWORD ROW =======================================================================
 		new Setting(contentEl)

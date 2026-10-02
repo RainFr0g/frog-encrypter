@@ -108,8 +108,8 @@ export class CompressionExtensionModal extends Modal {
         this.compressSelectEl.empty();
         this.skipSelectEl.empty();
         
-        const compressFragment = activeDocument.createDocumentFragment();
-        const skipFragment = activeDocument.createDocumentFragment();
+        const compressFragment = createFragment();
+        const skipFragment = createFragment();
 
         const extensionArr = Array.from(this.compressibleExtensions.entries()).sort((a, b) => a[0].localeCompare(b[0]));
         for(const [extension, toCompress] of extensionArr){
