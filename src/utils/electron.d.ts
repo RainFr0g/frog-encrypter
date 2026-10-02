@@ -3,10 +3,6 @@ declare module 'obsidian' {
         getConfig(key: string): unknown;
         setConfig(key: string, value: unknown): void;
     }
-	
-    interface App {
-        appVersion: string;
-    }
 }
 
 declare global {

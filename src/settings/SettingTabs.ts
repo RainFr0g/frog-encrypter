@@ -1,4 +1,4 @@
-import { ButtonComponent, PluginSettingTab, Setting, SettingDefinitionItem } from 'obsidian';
+import { ButtonComponent, PluginSettingTab, Setting, SettingDefinitionItem, apiVersion } from 'obsidian';
 import { compressionMode, IFrogEncrypter } from '../utils/types';
 import { FilePackEncrypt } from '../core/FilePackEncrypt';
 import { SettingsService } from './SettingsService';
@@ -558,8 +558,7 @@ export class FrogPluginSettingTab extends PluginSettingTab {
 	}
 
 	private isModernObsidian(): boolean {
-		const version = this.app.appVersion ?? '0.0.0';
-		const [major = 0, minor = 0] = version.split('.').map(Number);
+		const [major = 0, minor = 0] = apiVersion.split('.').map(Number);
 		return major > 1 || (major === 1 && minor >= 13);
 	}
 }
