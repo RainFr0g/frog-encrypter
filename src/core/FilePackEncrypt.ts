@@ -198,6 +198,7 @@ export class FilePackEncrypt {
 				const rawPath = StorageService.path.join(outputPath, file.path);
 				const destPath = StorageService.getUniqueDiskPath(rawPath);
 				const writeStream = StorageService.fs.createWriteStream(destPath, { highWaterMark: CHUNK_SIZE * 2 });
+			    writeStream.on('error', () => { /* ignore */ });
 				let success = false;
 
 				try {
@@ -210,7 +211,7 @@ export class FilePackEncrypt {
 
 						const decryptedBytes = await crypto.decrypt(chunkBuf, password, file.isCompressed);
 						if (!decryptedBytes) 
-							throw new Error('DECRYPTION_FAILED');
+							throw new Error('DECRYPTION_FAILED');	
 
 						processedOriginal += decryptedBytes.length;
 						const pct = index.totalOriginalSize > 0 ? Math.round((processedOriginal / index.totalOriginalSize) * 100) : 100;

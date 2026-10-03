@@ -317,6 +317,8 @@ export class FileEncrypt {
 
 			const readFd = StorageService.fs.openSync(filePath, 'r');
 			writeStream = StorageService.fs.createWriteStream(destPath, { highWaterMark: CHUNK_SIZE * 2 });
+			
+			writeStream.on('error', () => { /* ignore */ });
 			const ws = writeStream;
 			notice = new CancellableNotice('🔓 Decrypting...');
 
