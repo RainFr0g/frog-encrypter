@@ -256,15 +256,27 @@ export class FileEncrypt {
 
 			const encryptedByteSize = StorageService.fs.statSync(destAbs).size;
 			const encryptedSize = formatBytes(encryptedByteSize);
-
-			await this.plugin.app.vault.delete(file);
+			
+			let deleteFailed = false;
+			try {
+				await this.plugin.app.vault.delete(file);
+			} catch (e) {
+				const code = (e as NodeJS.ErrnoException)?.code;
+				if (code === 'EBUSY' || code === 'EPERM') 
+					deleteFailed = true;
+				else 
+					throw e;
+			}
 
 			const elapsed = ((Date.now() - overallStart) / 1000).toFixed(1);
 			new Notice(`🔒 Encrypted (${originalSize} → ${encryptedSize}) in ${elapsed}s`, 8000);
+			if(deleteFailed)
+				new Notice(`❌ Could not delete the original file — it is currently in use. Close it and delete manually.`, 10000)
+
 		} catch (e) {
-			if (e instanceof DOMException && e.name === 'AbortError') {
+			if (e instanceof DOMException && e.name === 'AbortError') 
 				new Notice('⛔ Encryption cancelled', 4000);
-			} else {
+			else {
 				console.error(e);
 				new Notice('❌ Encryption failed!');
 			}
