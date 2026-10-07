@@ -44,7 +44,9 @@ export class CancellableNotice {
     }
 
     private cancel(): void {
-        if (this.signal.aborted) return;
+        if (this.signal.aborted) 
+            return;
+        
         this.controller.abort();
         this.buttonEl.hide();
         this.messageEl.setText('⛔ Cancelling…');
@@ -52,7 +54,6 @@ export class CancellableNotice {
 }
 
 export function throwIfAborted(signal: AbortSignal): void {
-    if (signal.aborted) {
+    if (signal.aborted) 
         throw new DOMException('Operation cancelled', 'AbortError');
-    }
 }
