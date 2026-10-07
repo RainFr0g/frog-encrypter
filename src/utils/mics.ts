@@ -144,3 +144,7 @@ export function safeEndIndex(data: string, end: number): number {
 function isHighSurrogate(c: number): boolean {
 	return c >= 0xd800 && c <= 0xdbff;
 }
+
+export function nextFrame(): Promise<void> {
+    return new Promise((resolve) => window.requestAnimationFrame(() => resolve()));
+}

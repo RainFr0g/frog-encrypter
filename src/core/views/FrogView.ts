@@ -5,6 +5,8 @@ import { CryptoService } from '../../utils/CryptoService';
 import { StorageService } from '../../utils/StorageService';
 import { FILE_ENCRYPTED_EXTENSION, FILE_VIEW_TYPE, MIME_TYPES } from '../../utils/constants';
 import { getJsonFooterFromBinary, persistPasswordAndCache, probeSavedPasswords } from '../helpers/EncryptHelper';
+import { CancellableNotice, throwIfAborted } from '../../utils/CancellableNotice';
+import { formatBytes } from '../../utils/mics';
 
 export class FrogView extends FileView {
 	private plugin: IFrogEncrypter;
@@ -45,7 +47,7 @@ export class FrogView extends FileView {
 		this.contentEl.empty();	
 
 		const crypto = new CryptoService();
-		const notice = new Notice('🔓 Decrypting…', 0);
+		let notice: CancellableNotice | null = null;
 
 		try {
             const fullFilePath = StorageService.path.join(StorageService.getVaultPath(this.plugin), file.path);
@@ -56,14 +58,15 @@ export class FrogView extends FileView {
 				return;
 			}
 			this.hint = fileJsonFooter.hint;
-
             const cache = await probeSavedPasswords(crypto, fileJsonFooter.extension, fileJsonFooter.isCompressed);
 			const { password, hasConfirmed } = !cache ? await getDecryptPasswordModal(this.plugin.app, this.hint) : {password : cache.password, hasConfirmed: true};
 			if (!hasConfirmed) {
 				this.leaf.detach();
 				return;
 			}
-            
+
+    		notice = new CancellableNotice('🔓 Decrypting...');
+			
             const extension = !cache ? await crypto.decryptToString(fileJsonFooter.extension, password, fileJsonFooter.isCompressed) : cache.result;
             if(extension === null) {
                 new Notice('❌ Decryption failed!');
@@ -72,7 +75,8 @@ export class FrogView extends FileView {
             }
 			this.extension = extension;
 
-			const plain = await this.decryptAllChunks(crypto, fullFilePath, fileJsonFooter, password);
+        	throwIfAborted(notice.signal);
+			const plain = await this.decryptAllChunks(crypto, fullFilePath, fileJsonFooter, password, notice);
 			if (!plain) {
 				new Notice('❌ Decryption failed!');
 				this.leaf.detach();
@@ -83,29 +87,49 @@ export class FrogView extends FileView {
                 persistPasswordAndCache(crypto, password);
 
 			this.renderContent(this.extension, plain);
+		} catch (e) {
+			if (e instanceof DOMException && e.name === 'AbortError') 
+				new Notice('⛔ Decryption cancelled', 4000);
+			else {
+				console.error(e);
+				new Notice('❌ Decryption failed!');
+			}
+			this.leaf.detach();
 		} finally {
-			notice.hide();
+			if(notice !== null)
+				notice.hide();
 		}
 	}
 
-	private async decryptAllChunks(crypto: CryptoService, path: string, jsonFooter: EncryptedFile, password: string): Promise<Uint8Array | null> {
+	private async decryptAllChunks(crypto: CryptoService, path: string, jsonFooter: EncryptedFile, password: string, notice: CancellableNotice): Promise<Uint8Array | null> {
 		const pieces: Uint8Array[] = [];
 		let currentPos = 0;
 		const readFd = StorageService.fs.openSync(path, 'r');
+		
+		const payloadSize = jsonFooter.chunkSizes.reduce((a, b) => a + b, 0);
+		const encryptedSize = formatBytes(payloadSize);
 
-		for (const chunkSize of jsonFooter.chunkSizes) {
-            const chunkBuf = new Uint8Array(chunkSize);
-            StorageService.fs.readSync(readFd, chunkBuf, 0, chunkSize, currentPos);
-			currentPos += chunkSize;
+    	try {
+			for (const chunkSize of jsonFooter.chunkSizes) {
+				throwIfAborted(notice.signal);
+				const chunkBuf = new Uint8Array(chunkSize);
+				StorageService.fs.readSync(readFd, chunkBuf, 0, chunkSize, currentPos);
+				currentPos += chunkSize;
 
-			const decryptedData = await crypto.decrypt(chunkBuf, password, jsonFooter.isCompressed);
-			if (!decryptedData){
-				StorageService.fs.closeSync(readFd);
-				return null;
+				const decryptedData = await crypto.decrypt(chunkBuf, password, jsonFooter.isCompressed);
+				if (!decryptedData)
+					return null;
+
+				pieces.push(decryptedData);
+				
+				const pct = payloadSize > 0 ? Math.min(100, Math.round((currentPos / payloadSize) * 100)) : 100;
+
+				notice.setMessage(`🔓 Decrypting... ${pct}% (${encryptedSize})`);
+				await nextFrame();
 			}
-			pieces.push(decryptedData);
+        } finally {
+			StorageService.fs.closeSync(readFd);
 		}
-        StorageService.fs.closeSync(readFd);
         
         if(pieces.length === 0)
             return null;
