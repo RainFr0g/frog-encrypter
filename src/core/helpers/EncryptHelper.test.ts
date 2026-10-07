@@ -15,6 +15,15 @@ const settingsState: SettingsState = vi.hoisted(() => ({
 }));
 
 // ==================== Mocks ====================
+
+vi.mock('obsidian', () => ({
+    Notice: class {
+        constructor(public message: string, public timeout?: number) {}
+        hide() {}
+        setMessage(msg: string) { this.message = msg; }
+    }
+}));
+
 vi.mock('../../utils/StorageService', async () => {
     const fs = await import('node:fs');
     const path = await import('node:path');
