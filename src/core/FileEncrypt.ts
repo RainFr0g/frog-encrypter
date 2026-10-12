@@ -38,10 +38,10 @@ export class FileEncrypt {
 			})
 		);
 		
-		plugin.addCommand({id: 'frog-lock-encrypted-files', name: 'Lock all encrypted notes and files', callback: ()=> this.closeEncryptedLeaves(plugin)});
 		plugin.addCommand({id: 'frog-new-encrypted-note', name: 'Create new encrypted note', callback: async () => await this.createNewEncryptedNoteInFolder(this.getDefaultNoteFolder())});
-		plugin.addRibbonIcon('shield-check', 'Lock all encrypted notes and files', ()=> this.closeEncryptedLeaves(plugin)); 
 		plugin.addRibbonIcon('file-lock', 'Create new encrypted note',  async () => await this.createNewEncryptedNoteInFolder(this.getDefaultNoteFolder()));
+		plugin.addCommand({id: 'frog-lock-encrypted-files', name: 'Lock all encrypted notes and files', callback: ()=> this.closeEncryptedLeaves(plugin)});
+		plugin.addRibbonIcon('shield-check', 'Lock all encrypted notes and files', ()=> this.closeEncryptedLeaves(plugin)); 
 	}
 
 	private async closeEncryptedLeaves(plugin: IFrogEncrypter): Promise<void> {
