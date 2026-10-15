@@ -142,7 +142,7 @@ export class FilePackEncrypt {
 	static async decryptAndUnpack(plugin: IFrogEncrypter, packPath: string, outputPath: string): Promise<boolean> {
 		const crypto = new CryptoService();
 		let readFd: number | null = null;
-		let notice: CancellableNotice | null = null;
+		const notice = new CancellableNotice('🔓 Decrypting...', false);
 
 		try {
 			const fileSize = StorageService.fs.statSync(packPath).size;
@@ -187,8 +187,8 @@ export class FilePackEncrypt {
 			let processedOriginal = 0;
 			const originalSize = formatBytes(index.totalOriginalSize);
 			const failedFiles: string[] = [];
-
-			notice = new CancellableNotice('🔓 Decrypting...');
+			
+			notice.reveal();
 
 			for (const file of index.files) {
 				throwIfAborted(notice.signal);
@@ -280,7 +280,7 @@ export class FilePackEncrypt {
 			if (readFd !== null)
 				try { StorageService.fs.closeSync(readFd); } catch { /* already closed */ }
 
-			notice?.hide();
+			notice.hide();
 		}
 	}
 }

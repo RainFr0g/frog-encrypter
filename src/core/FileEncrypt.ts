@@ -291,7 +291,7 @@ export class FileEncrypt {
 	}
 
 	private async decryptFile(file: TFile): Promise<void> {
-		let notice: CancellableNotice | null = null;
+		const notice = new CancellableNotice('🔓 Decrypting...');
 		let writeStream: ReturnType<typeof StorageService.fs.createWriteStream> | null = null;
 		let destPath: string | null = null;
 		let success = false;
@@ -317,7 +317,7 @@ export class FileEncrypt {
 				new Notice('❌ Decryption failed!');
 				return;
 			}
-
+ 
 			const overallStart = Date.now();
 
 			const candidate = file.path.replace(new RegExp(`\\.${FILE_ENCRYPTED_EXTENSION}$`, 'i'), `.${extension}`);
@@ -332,7 +332,8 @@ export class FileEncrypt {
 			
 			writeStream.on('error', () => { /* ignore */ });
 			const ws = writeStream;
-			notice = new CancellableNotice('🔓 Decrypting...');
+
+			notice.reveal();
 
 			let currentPos = 0;
 			let processedPlain = 0;
@@ -401,7 +402,7 @@ export class FileEncrypt {
 			if (!success && destPath) 
 				try { StorageService.fs.unlinkSync(destPath); } catch { /* ignore */ }
 
-			notice?.hide();
+			notice.hide();
 		}
 	}
 

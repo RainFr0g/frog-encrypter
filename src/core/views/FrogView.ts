@@ -47,8 +47,7 @@ export class FrogView extends FileView {
 		this.contentEl.empty();	
 
 		const crypto = new CryptoService();
-		let notice: CancellableNotice | null = null;
-
+		const notice = new CancellableNotice('🔓 Decrypting...', false);
 		try {
             const fullFilePath = StorageService.path.join(StorageService.getVaultPath(this.plugin), file.path);
             const fileJsonFooter = getJsonFooterFromBinary<EncryptedFile>(fullFilePath);
@@ -65,7 +64,7 @@ export class FrogView extends FileView {
 				return;
 			}
 
-    		notice = new CancellableNotice('🔓 Decrypting...');
+			notice.reveal();
 
             const extension = !cache ? await crypto.decryptToString(fileJsonFooter.extension, password, fileJsonFooter.isCompressed) : cache.result;
             if(extension === null) {
@@ -96,8 +95,7 @@ export class FrogView extends FileView {
 			}
 			this.leaf.detach();
 		} finally {
-			if(notice !== null)
-				notice.hide();
+			notice.hide();
 		}
 	}
 
