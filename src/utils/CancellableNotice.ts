@@ -7,7 +7,7 @@ export class CancellableNotice {
     private readonly messageEl: HTMLElement;
     private readonly buttonEl: HTMLButtonElement;
 
-    constructor(initialMessage: string) {
+    constructor(initialMessage: string, isVisible: boolean = true) {
         this.controller = new AbortController();
         this.signal = this.controller.signal;
 
@@ -29,6 +29,9 @@ export class CancellableNotice {
             e.stopPropagation();
             this.cancel();
         };
+
+        if(!isVisible)
+            this.conceal();
     }
 
     setMessage(text: string): void {
@@ -39,8 +42,24 @@ export class CancellableNotice {
         this.notice.hide();
     }
     
-    get isCancelled(): boolean {
-        return this.signal.aborted;
+    conceal(): void {
+        const parent = this.notice.messageEl.parentElement;
+        if (parent)
+            parent.addClass('frog-cancellable-notice-hidden');
+    }
+
+    reveal(): void {
+        const parent = this.notice.messageEl.parentElement;
+        if (parent)
+            parent.removeClass('frog-cancellable-notice-hidden');
+    }
+
+    hideButton(): void {
+        this.buttonEl.hide();
+    }
+
+    showButton(): void {
+        this.buttonEl.show();
     }
 
     private cancel(): void {
