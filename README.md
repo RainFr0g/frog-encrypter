@@ -1,10 +1,14 @@
 # Frog Encrypter
 
+![GitHub release](https://img.shields.io/github/v/release/RainFr0g/frog-encrypter)
+![GitHub license](https://img.shields.io/github/license/RainFr0g/frog-encrypter)
+![Obsidian min version](https://img.shields.io/badge/Obsidian-1.8.7%2B-blue)
+
 **Encryption of text fragments, notes, and files both inside and outside the Obsidian vault.**
 
 Frog Encrypter lets you encrypt selected text, entire notes, and any files directly inside Obsidian. Files are encrypted using **AES-256-GCM** and **PBKDF2 (SHA-512)** algorithms.
 
-> ⚠️ **Desktop only.** Some features use desktop-only APIs and do not work on mobile devices. For Android/iOS, use **[Frog Encrypter Mobile](#)** (Coming soon) — files created by either plugin are compatible with each other.
+> ⚠️ **Desktop only.** Some features use desktop-only APIs and do not work on mobile devices. For Android/iOS, use **[Frog Encrypter Mobile](https://community.obsidian.md/plugins/frog-encrypter-mobile)** — files created by either plugin are compatible with each other.
 
 ---
 
