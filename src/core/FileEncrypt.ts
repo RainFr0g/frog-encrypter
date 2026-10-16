@@ -291,7 +291,7 @@ export class FileEncrypt {
 	}
 
 	private async decryptFile(file: TFile): Promise<void> {
-		const notice = new CancellableNotice('🔓 Decrypting...');
+		const notice = new CancellableNotice('🔓 Decrypting...', false);
 		let writeStream: ReturnType<typeof StorageService.fs.createWriteStream> | null = null;
 		let destPath: string | null = null;
 		let success = false;
@@ -312,6 +312,8 @@ export class FileEncrypt {
 			if (!hasConfirmed) 
 				return;
 			
+			notice.reveal();
+
 			const extension = !cache ? await crypto.decryptToString(fileJson.extension, password, fileJson.isCompressed) : cache.result;
 			if (extension === null) {
 				new Notice('❌ Decryption failed!');
@@ -332,8 +334,6 @@ export class FileEncrypt {
 			
 			writeStream.on('error', () => { /* ignore */ });
 			const ws = writeStream;
-
-			notice.reveal();
 
 			let currentPos = 0;
 			let processedPlain = 0;
