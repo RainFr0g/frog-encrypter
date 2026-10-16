@@ -6,7 +6,7 @@ import { StorageService } from '../../utils/StorageService';
 import { FILE_ENCRYPTED_EXTENSION, FILE_VIEW_TYPE, MIME_TYPES } from '../../utils/constants';
 import { getJsonFooterFromBinary, persistPasswordAndCache, probeSavedPasswords } from '../helpers/EncryptHelper';
 import { CancellableNotice, throwIfAborted } from '../../utils/CancellableNotice';
-import { formatBytes, nextFrame } from '../../utils/mics';
+import { formatBytes, nextFrame } from '../../utils/misc';
 
 export class FrogView extends FileView {
 	private plugin: IFrogEncrypter;

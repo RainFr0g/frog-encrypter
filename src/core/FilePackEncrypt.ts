@@ -4,7 +4,7 @@ import { StorageService } from '../utils/StorageService';
 import { getEncryptPasswordModal } from '../modals/EncryptPasswordModal';
 import { IFrogEncrypter, PackFooter, PackIndex } from '../utils/types';
 import { getDecryptPasswordModal } from '../modals/DecryptPasswordModal';
-import { formatBytes } from '../utils/mics';
+import { formatBytes } from '../utils/misc';
 import { CHUNK_SIZE, JSON_SIZE_BYTES, COMPRESS_INDEX } from '../utils/constants';
 import { getJsonFooterFromBinary, persistPasswordAndCache, probeSavedPasswords, shouldCompress } from './helpers/EncryptHelper';
 import { PasswordManager } from '../utils/PasswordManager';

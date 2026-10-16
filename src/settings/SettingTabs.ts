@@ -4,7 +4,7 @@ import { FilePackEncrypt } from '../core/FilePackEncrypt';
 import { SettingsService } from './SettingsService';
 import { PasswordManager } from '../utils/PasswordManager';
 import { StorageService } from '../utils/StorageService';
-import { getTimeStamp } from '../utils/mics';
+import { getTimeStamp } from '../utils/misc';
 import { CompressionExtensionModal } from '../modals/CompressionExtensionModal';
 
 export class FrogPluginSettingTab extends PluginSettingTab {

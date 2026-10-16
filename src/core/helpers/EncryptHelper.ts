@@ -5,7 +5,7 @@ import { CHUNK_SIZE, JSON_SIZE_BYTES, OTHER_EXTENSIONS, SALT_SIZE, VECTOR_SIZE }
 import { StorageService } from '../../utils/StorageService';
 import { SettingsService } from '../../settings/SettingsService';
 import { PasswordManager } from '../../utils/PasswordManager';
-import { base64ToBytes, safeEndIndex } from '../../utils/mics';
+import { base64ToBytes, safeEndIndex } from '../../utils/misc';
 import { CancellableNotice, throwIfAborted } from '../../utils/CancellableNotice';
 
 export async function buildEncryptedNote(crypto: CryptoService, data:string, password: string, hint: string, extension: string): Promise<string>{

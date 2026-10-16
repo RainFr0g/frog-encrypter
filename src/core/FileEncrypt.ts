@@ -5,7 +5,7 @@ import { getDecryptPasswordModal } from '../modals/DecryptPasswordModal';
 import { CryptoService } from '../utils/CryptoService';
 import { FrogView } from './views/FrogView';
 import { MdencView } from './views/MdencView';
-import { formatBytes } from '../utils/mics';
+import { formatBytes } from '../utils/misc';
 import { CHUNK_SIZE, FILE_ENCRYPTED_EXTENSION, FILE_VIEW_TYPE, JSON_SIZE_BYTES, MD_ENCRYPTED_EXTENSION, MD_VIEW_TYPE } from '../utils/constants';
 import { buildEncryptedNote, decryptNoteCipher, getJsonFooterFromBinary, persistPasswordAndCache, probeSavedPasswords, shouldCompress } from './helpers/EncryptHelper';
 import { StorageService } from '../utils/StorageService';
@@ -311,7 +311,7 @@ export class FileEncrypt {
 			const { password, hasConfirmed } = !cache ? await getDecryptPasswordModal(this.plugin.app, fileJson.hint) : { password: cache.password, hasConfirmed: true };
 			if (!hasConfirmed) 
 				return;
-
+			
 			const extension = !cache ? await crypto.decryptToString(fileJson.extension, password, fileJson.isCompressed) : cache.result;
 			if (extension === null) {
 				new Notice('❌ Decryption failed!');
