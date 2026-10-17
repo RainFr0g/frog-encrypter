@@ -34,7 +34,7 @@ Author: **[RainFr0g](https://github.com/RainFr0g)**
 
 ---
 
-## Screen capture protection
+## 🛡 Screen capture protection
 
 On Windows and macOS, Frog Encrypter hides Obsidian windows from screen capture while encrypted content is open. This prevents accidental leaks during screen sharing (Zoom, Teams, OBS) and screenshots.
 
