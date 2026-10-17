@@ -19,9 +19,14 @@ declare global {
 				writeUInt32LE(value: number, offset: number): void;
 			};
 		};
+		
+        require(module: '@electron/remote'): {
+            BrowserWindow: {
+                getAllWindows(): Array<{ setContentProtection(enable: boolean): void }>;
+            };
+        };
 	}
 }
-
 export interface ElectronDialog {
 	showOpenDialog(options: ElectronOpenDialogOptions): Promise<ElectronOpenDialogResult>;
 	showSaveDialog(options: ElectronSaveDialogOptions): Promise<ElectronSaveDialogResult>;

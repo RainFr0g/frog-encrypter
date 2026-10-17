@@ -5,12 +5,14 @@ import { SettingsService } from './settings/SettingsService';
 import { InplaceEncrypt } from './core/InplaceEncrypt';
 import { FileEncrypt } from './core/FileEncrypt';
 import { MdencView } from './core/views/MdencView';
+import { ScreenProtectionManager } from './utils/ScreenProtectionManager';
 
 export default class FrogEncrypter extends Plugin implements IFrogEncrypter {
 
 	async onload() {
 		await SettingsService.init(this);
 		PasswordManager.init();
+		ScreenProtectionManager.init(this); 
 
 		new InplaceEncrypt(this);
 		new FileEncrypt(this);
@@ -28,6 +30,7 @@ export default class FrogEncrypter extends Plugin implements IFrogEncrypter {
 	onunload() {
 		PasswordManager.unInit();
 		SettingsService.unInit();
+		ScreenProtectionManager.unInit();
 		MdencView.forceRemoveSetViewStateGuard();
 	}
 }

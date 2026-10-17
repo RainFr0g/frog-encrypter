@@ -34,6 +34,17 @@ Author: **[RainFr0g](https://github.com/RainFr0g)**
 
 ---
 
+## Screen capture protection
+
+On Windows and macOS, Frog Encrypter hides Obsidian windows from screen capture while encrypted content is open. This prevents accidental leaks during screen sharing (Zoom, Teams, OBS) and screenshots.
+
+**Limitations:**
+- Does not protect against hardware capture cards (HDMI)
+- Does not protect against malware with admin privileges
+- Linux, Android, and iOS are not supported
+
+---
+
 ## 📂 Supported formats
 
 Frog Encrypter can encrypt and decrypt any file type supported by Obsidian, including formats added by third-party plugins. Obsidian out of the box supports **24 file types**.

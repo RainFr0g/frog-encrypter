@@ -7,6 +7,7 @@ import { FILE_ENCRYPTED_EXTENSION, FILE_VIEW_TYPE, MIME_TYPES } from '../../util
 import { getJsonFooterFromBinary, persistPasswordAndCache, probeSavedPasswords } from '../helpers/EncryptHelper';
 import { CancellableNotice, throwIfAborted } from '../../utils/CancellableNotice';
 import { formatBytes, nextFrame } from '../../utils/misc';
+import { ScreenProtectionManager } from '../../utils/ScreenProtectionManager';
 
 export class FrogView extends FileView {
 	private plugin: IFrogEncrypter;
@@ -45,6 +46,8 @@ export class FrogView extends FileView {
 		this.hint = '';
 		this.extension = '';
 		this.contentEl.empty();	
+
+		ScreenProtectionManager.enable();
 
 		const crypto = new CryptoService();
 		const notice = new CancellableNotice('🔓 Decrypting...', false);

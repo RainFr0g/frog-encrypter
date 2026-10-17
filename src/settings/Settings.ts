@@ -1,4 +1,4 @@
-import { compressionMode } from "../utils/types";
+import { compressionMode, screenProtectionMode } from "../utils/types";
 import { OTHER_EXTENSIONS } from "../utils/constants";
 export interface Settings 
 {
@@ -8,6 +8,7 @@ export interface Settings
     passwordTtlMinutes:number;
     compressionMode: compressionMode;
     compressibleExtensions: Map<string, boolean>;
+    screenProtectionMode: screenProtectionMode;
 }
 
 export const DEFAULT_SETTINGS : Settings = 
@@ -33,5 +34,7 @@ export const DEFAULT_SETTINGS : Settings =
         ['mp4', false], ['webm', false], ['mov', false], ['mkv', false], ['ogv', false], ['avi', false], ['wmv', false], ['flv', false],
         ['m4v', false], ['3gpp', false], ['pdf', false], ['docx', false], ['xlsx', false], ['pptx', false], ['odt', false], ['ods', false], ['odp', false],
         ['zip', false], ['rar', false], ['7z', false], ['gz', false], ['bz2', false], ['xz', false], ['tar', false],
-        ['exe', false], ['dll', false], ['so', false], ['dylib', false], ['apk', false], ['ipa', false]])
+        ['exe', false], ['dll', false], ['so', false], ['dylib', false], ['apk', false], ['ipa', false]]),
+    
+    screenProtectionMode: 'when_encrypted_open'
     }

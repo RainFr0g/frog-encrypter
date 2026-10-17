@@ -5,6 +5,7 @@ import { MD_ENCRYPTED_EXTENSION, MD_VIEW_TYPE } from '../../utils/constants';
 import { buildEncryptedNote, decryptNoteCipher, persistPasswordAndCache, probeSavedPasswords } from '../helpers/EncryptHelper';
 import { getEncryptPasswordModal } from '../../modals/EncryptPasswordModal';
 import { CryptoService } from '../../utils/CryptoService';
+import { ScreenProtectionManager } from '../../utils/ScreenProtectionManager';
 
 export class MdencView extends MarkdownView {
 	private plugin: IFrogEncrypter;
@@ -51,6 +52,8 @@ export class MdencView extends MarkdownView {
 		this.hint = '';
 		this.cachedUnencryptedData = '';
 		this.encryptedNote = null;
+		
+		ScreenProtectionManager.enable();
 
 		const rawContent = await this.plugin.app.vault.read(file);
 

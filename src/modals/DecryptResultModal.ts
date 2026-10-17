@@ -1,4 +1,5 @@
 import { App, MarkdownView, Modal, Notice, Setting } from 'obsidian';
+import { ScreenProtectionManager } from '../utils/ScreenProtectionManager';
 
 export async function getDecryptResultModal(app: App, decryptedText: string) {
 	return new Promise<{ editedDecryptedText: string; isDecryptionRequired: boolean; isSaveRequired: boolean; hasConfirmed: boolean; }>((resolve) => {
@@ -36,8 +37,10 @@ class DecryptResultModal extends Modal {
 		const { contentEl, titleEl } = this;
 		titleEl.setText('Decryption result');
 		
-		const activeViewMode = this.app.workspace.getActiveViewOfType(MarkdownView)?.getMode();
+		ScreenProtectionManager.enable();
 
+		const activeViewMode = this.app.workspace.getActiveViewOfType(MarkdownView)?.getMode();
+		
 		// =================== RESULT TEXT AREA =======================================================================
 		const resultContainer = contentEl.createDiv();
 		resultContainer.addClass('frog-decrypt-result-container');
@@ -85,7 +88,8 @@ class DecryptResultModal extends Modal {
 	onClose(): void {
 		const { contentEl } = this;
 		contentEl.empty();
-
+		ScreenProtectionManager.releaseIfNoOtherOpen();
+		
 		void this.callback(this.editedDecryptedText, this.isDecryptionRequired, this.isSaveRequired, this.hasConfirmed);
 	}
 }

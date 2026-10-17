@@ -42,3 +42,4 @@ export interface PackIndex {
 
 
 export type compressionMode = 'always' | 'never' | 'by_extension';
+export type screenProtectionMode = 'always' | 'never' | 'when_encrypted_open';

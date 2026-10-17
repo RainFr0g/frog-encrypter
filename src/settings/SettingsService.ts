@@ -1,6 +1,6 @@
 import { DEFAULT_SETTINGS, Settings } from './Settings';
 import { FrogPluginSettingTab } from './SettingTabs';
-import { compressionMode, IFrogEncrypter } from '../utils/types';
+import { compressionMode, IFrogEncrypter, screenProtectionMode } from '../utils/types';
 
 export class SettingsService {
 	private static plugin: IFrogEncrypter | null = null;
@@ -48,6 +48,12 @@ export class SettingsService {
 
 		return this.settings.compressibleExtensions;
 	}
+	public static getScreenProtectionMode(): screenProtectionMode {
+		if(!this.settings)
+			this.settings = this.cloneDefaults();
+
+		return this.settings.screenProtectionMode;
+	}
 
 	public static async setConfirmPassword(confrimPassword: boolean): Promise<void> {
 		if (this.settings) 
@@ -88,6 +94,12 @@ export class SettingsService {
 	public static async addCompressibleExtension(extension: string, toCompress: boolean): Promise<void> {
 		if (this.settings)
 			this.settings.compressibleExtensions.set(extension, toCompress);
+
+		await this.saveSettings();
+	}
+	public static async setScreenProtectionMode(screenProtectionMode: screenProtectionMode): Promise<void> {
+		if (this.settings) 
+			this.settings.screenProtectionMode = screenProtectionMode;
 
 		await this.saveSettings();
 	}

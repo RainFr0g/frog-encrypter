@@ -1,11 +1,12 @@
 import { ButtonComponent, PluginSettingTab, Setting, SettingDefinitionItem, apiVersion } from 'obsidian';
-import { compressionMode, IFrogEncrypter } from '../utils/types';
+import { compressionMode, IFrogEncrypter, screenProtectionMode } from '../utils/types';
 import { FilePackEncrypt } from '../core/FilePackEncrypt';
 import { SettingsService } from './SettingsService';
 import { PasswordManager } from '../utils/PasswordManager';
 import { StorageService } from '../utils/StorageService';
 import { getTimeStamp } from '../utils/misc';
 import { CompressionExtensionModal } from '../modals/CompressionExtensionModal';
+import { ScreenProtectionManager } from '../utils/ScreenProtectionManager';
 
 export class FrogPluginSettingTab extends PluginSettingTab {
 	private plugin: IFrogEncrypter;
@@ -95,6 +96,17 @@ export class FrogPluginSettingTab extends PluginSettingTab {
 						render: (setting) => this.renderCompression(setting)
 					}
 				]
+			},
+			{
+				type: 'group',
+				heading: '🛡 Screen capture protection',
+				items: [
+					{
+						name: 'Protection mode',
+						desc: 'Choose when to hide Obsidian from screen capture tools (OBS, Zoom, Teams, screenshots)',
+						render: (setting) => this.renderScreenProtection(setting)
+					}
+				]
 			}
 		];
 	}
@@ -109,6 +121,8 @@ export class FrogPluginSettingTab extends PluginSettingTab {
 				return SettingsService.getAutofillLastPassword();
 			case 'passwordTtlMinutes':
 				return SettingsService.getPasswordTtlMinutes().toString();
+			case 'screenProtectionMode':
+    			return SettingsService.getScreenProtectionMode();
 			default:
 				return undefined;
 		}
@@ -138,6 +152,11 @@ export class FrogPluginSettingTab extends PluginSettingTab {
 				const numeric = typeof value === 'number' ? value : parseInt(value as string) || 1;
 				await SettingsService.setPasswordTtlMinutes(numeric > 525600 ? 525600 : numeric);
 				PasswordManager.rearrangeExpireTime();
+				break;
+			}
+			case 'screenProtectionMode':{
+				await SettingsService.setScreenProtectionMode(value as screenProtectionMode);
+				this.refreshSettings();
 				break;
 			}
 		}
@@ -244,6 +263,16 @@ export class FrogPluginSettingTab extends PluginSettingTab {
 			.setName('Compression mode')
 			.setDesc('Choose how to compress files before encryption');
 		this.renderCompression(compressionSetting);
+
+		// ==================== SCREEN PROTECTION SETTINGS ====================
+		new Setting(containerEl)
+			.setHeading()
+			.setName('🛡 Screen capture protection');
+
+		const screenProtectionSetting = new Setting(containerEl)
+			.setName('Protection mode')
+			.setDesc('Choose when to hide Obsidian from screen capture tools (OBS, Zoom, Teams, screenshots)');
+		this.renderScreenProtection(screenProtectionSetting);
 	}
 
 	// =========================================================================
@@ -543,7 +572,22 @@ export class FrogPluginSettingTab extends PluginSettingTab {
 				
 			});
 	}
-
+	
+	private renderScreenProtection(setting: Setting): void {
+		setting.addDropdown((dropdown) => {
+			const modes: Record<screenProtectionMode, string> = {
+				always: 'Always',
+				never: 'Never',
+				when_encrypted_open: 'Only when encrypted content is open',
+			};
+			dropdown.addOptions(modes);
+			dropdown.setValue(SettingsService.getScreenProtectionMode());
+			dropdown.onChange(async (value) => {
+				await SettingsService.setScreenProtectionMode(value as screenProtectionMode);
+				ScreenProtectionManager.onModeChanged();
+			});
+		});
+	}
 	// =========================================================================
 	// HELPERS
 	// =========================================================================
