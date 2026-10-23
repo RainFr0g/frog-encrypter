@@ -1,6 +1,6 @@
 {
 	"name": "frog-encrypter",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"description": "Encrypt text fragments, notes, and files inside and outside your Obsidian vault.",
 	"main": "main.js",
 	"scripts": {
