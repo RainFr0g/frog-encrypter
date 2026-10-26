@@ -3,6 +3,7 @@ import { SettingsService } from '../settings/SettingsService';
 import { PasswordManager } from '../utils/PasswordManager';
 import { enforceHintByteLimit, matchAnimation, mismatchAnimation, setupEnterAsTab } from './EncryptPasswordModal';
 import { encodeHint } from '../utils/misc';
+import { ScreenProtectionManager } from '../utils/ScreenProtectionManager';
 
 export function getEncryptInsertPasswordModal(app: App) {
 	return new Promise<{ textToEncrypt: string; password: string; hint: string; hasConfirmed: boolean; }>((resolve) => {
@@ -41,7 +42,9 @@ class EncryptInsertPasswordModal extends Modal {
 		let hintInput: TextComponent;
 
 		titleEl.setText('Encrypting');
-		
+
+		ScreenProtectionManager.enable();
+
 		// =================== INSERT TEXT AREA =======================================================================
 		const textContainer = contentEl.createDiv();
 		textContainer.addClass('frog-decrypt-result-container');
@@ -150,6 +153,8 @@ class EncryptInsertPasswordModal extends Modal {
 		contentEl.empty();
 		
 		const base64Hint = encodeHint(this.hint);
+		
+		ScreenProtectionManager.releaseIfNoOtherOpen();
 		void this.callback(this.textToEncrypt, this.password, base64Hint, this.hasConfirmed);
 	}
 }

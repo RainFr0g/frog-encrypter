@@ -88,8 +88,8 @@ class DecryptResultModal extends Modal {
 	onClose(): void {
 		const { contentEl } = this;
 		contentEl.empty();
+
 		ScreenProtectionManager.releaseIfNoOtherOpen();
-		
 		void this.callback(this.editedDecryptedText, this.isDecryptionRequired, this.isSaveRequired, this.hasConfirmed);
 	}
 }

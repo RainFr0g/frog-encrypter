@@ -1,5 +1,6 @@
 import { App, Modal, Setting, TextComponent } from 'obsidian';
 import { decodeHint } from '../utils/misc';
+import { ScreenProtectionManager } from '../utils/ScreenProtectionManager';
 
 export async function getDecryptPasswordModal(app: App, hint: string, ) {
 	return new Promise<{ password: string; hasConfirmed: boolean }>( (resolve) => {
@@ -33,6 +34,8 @@ class DecryptPasswordModal extends Modal {
 		const { contentEl, titleEl } = this;
 		titleEl.setText('Decrypting');
 		contentEl.createDiv();
+		
+		ScreenProtectionManager.enable();
 
 		// =================== PASSWORD ROW =======================================================================
 		new Setting(contentEl)
@@ -87,6 +90,7 @@ class DecryptPasswordModal extends Modal {
 		const { contentEl } = this;
 		contentEl.empty();
 
+		ScreenProtectionManager.releaseIfNoOtherOpen();
 		void this.callback(this.password, this.hasConfirmed);
 	}
 }

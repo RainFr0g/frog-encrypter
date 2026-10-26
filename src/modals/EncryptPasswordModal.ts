@@ -3,6 +3,7 @@ import { SettingsService } from '../settings/SettingsService';
 import { PasswordManager } from '../utils/PasswordManager';
 import { encodeHint, truncateUtf8 } from '../utils/misc';
 import { HINT_MAX_BYTES } from '../utils/constants';
+import { ScreenProtectionManager } from '../utils/ScreenProtectionManager';
 
 export function getEncryptPasswordModal(app: App) {
 	return new Promise<{ password: string; hint: string; hasConfirmed: boolean; }>((resolve) => {
@@ -37,6 +38,8 @@ class EncryptPasswordModal extends Modal {
 		
 		titleEl.setText('Encrypting');
 		contentEl.createDiv();
+
+		ScreenProtectionManager.enable();
 
 		// =================== PASSWORD ROW =======================================================================
 		new Setting(contentEl)
@@ -132,6 +135,8 @@ class EncryptPasswordModal extends Modal {
 		contentEl.empty();
 
 		const base64Hint = encodeHint(this.hint);
+		
+		ScreenProtectionManager.releaseIfNoOtherOpen();
 		void this.callback(this.password, base64Hint, this.hasConfirmed);
 	}
 }
