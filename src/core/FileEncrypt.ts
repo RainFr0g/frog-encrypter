@@ -113,7 +113,7 @@ export class FileEncrypt {
 		const newPath = StorageService.getUniqueVaultPath(this.plugin, candidate);
 
 		await this.plugin.app.vault.create(newPath, encryptedText);
-		await this.plugin.app.vault.delete(file);
+		await this.deleteFile(file);
 		const name = newPath.split('/').pop() ?? newPath;
 		new Notice(`🔒 Encrypted as ${name}`);
 	}
@@ -151,7 +151,7 @@ export class FileEncrypt {
 		const newPath = StorageService.getUniqueVaultPath(this.plugin, candidate);
 
 		await this.plugin.app.vault.create(newPath, decryptedText);
-		await this.plugin.app.vault.delete(file);
+		await this.deleteFile(file);
 
 		if (!cache)
 			persistPasswordAndCache(crypto, password);
@@ -259,7 +259,7 @@ export class FileEncrypt {
 			
 			let deleteFailed = false;
 			try {
-				await this.plugin.app.vault.delete(file);
+				await this.deleteFile(file);
 			} catch (e) {
 				const code = (e as NodeJS.ErrnoException)?.code;
 				if (code === 'EBUSY' || code === 'EPERM') 
@@ -370,7 +370,7 @@ export class FileEncrypt {
 				StorageService.fs.closeSync(readFd);
 			}
 
-			await this.plugin.app.vault.delete(file);
+			await this.deleteFile(file);
 			if (!cache)
 				persistPasswordAndCache(crypto, password);
 
@@ -438,5 +438,9 @@ export class FileEncrypt {
 		}
 		
 		return vault.getRoot();
+	}
+
+	private async deleteFile(file: TFile): Promise<void> {
+		await this.plugin.app.vault.delete(file);
 	}
 }
